@@ -25,7 +25,10 @@ def whats_new(session):
     soup = BeautifulSoup(response.text, features='lxml')
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
-    sections_by_python = div_with_ul.find_all('li', attrs={'class': 'toctree-l1'})
+    sections_by_python = div_with_ul.find_all(
+        'li',
+        attrs={'class': 'toctree-l1'}
+    )
 
     for section in tqdm(sections_by_python):
         version_a_tag = find_tag(section, 'a')
@@ -88,7 +91,11 @@ def download(session):
     soup = BeautifulSoup(response.text, 'lxml')
     main_tag = find_tag(soup, 'div', {'role': 'main'})
     table_tag = find_tag(main_tag, 'table', {'class': 'docutils'})
-    pdf_a4_tag = find_tag(table_tag, 'a', {'href': re.compile(r'.+pdf-a4\.zip$')})
+    pdf_a4_tag = find_tag(
+        table_tag,
+        'a',
+        {'href': re.compile(r'.+pdf-a4\.zip$')}
+    )
     pdf_a4_link = pdf_a4_tag['href']
     archive_url = urljoin(downloads_url, pdf_a4_link)
     filename = archive_url.split('/')[-1]
@@ -110,7 +117,7 @@ def get_table_from_section(session, section_with_tbody):
                 type_and_status_pep = find_tag(
                     section, 'abbr'
                 )
-            except:
+            except Exception:
                 type_and_status_pep = []
             if type_and_status_pep != []:
                 type_and_status_pep = type_and_status_pep['title'].split(
